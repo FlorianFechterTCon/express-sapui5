@@ -22,28 +22,16 @@ let serveUi5 = function(oSettings, app) {
   app.get("/", async (req, res) => {
     res.redirect(homePage);
   });
-
-  // redirect to FLP
-  app.get(homePage, async (req, res) => {
-    let flp = await fetch(cdn + homePage, {
-      agent: oAgent
-    });
-    const $ = cheerio.load(await flp.text());
-    if ($("#sap-ui-bootstrap").attr()) {
-      $("#sap-ui-bootstrap").attr().src = cdn + "/resources/sap-ui-core.js";
-    }
-    if ($("#sap-ushell-bootstrap").attr()) {
-      $("#sap-ushell-bootstrap").attr().src =
-        cdn + "/test-resources/sap/ushell/bootstrap/sandbox.js";
-    }
-    //standalone script
-    $('script[src="../../bootstrap/standalone.js"]').each((index, node) => {
-      node.attribs.src =
-        cdn + "/test-resources/sap/ushell/bootstrap/standalone.js";
-    });
-
-    res.send($.html());
-  });
+  
+  // proxy ui5 to cdn
+  app.use("/" + oSettings.version + "/test-resources", proxy({
+    target: cdn,
+    changeOrigin: true
+  }));
+  app.use("/" + oSettings.version + "/resources/", proxy({
+    target: cdn,
+    changeOrigin: true
+  }));
 
   // no odata cache (including metadata)
   app.use("/sap/opu", noCache());

@@ -51,7 +51,7 @@ let serveUi5 = function(oSettings, app) {
   if (oNeoApp && oNeoApp.routes) {
     oNeoApp.routes.forEach(function(oRoute) {
       var oTarget = oRoute.target;
-      if (oTarget) {
+      if (oTarget && !(oRoute.path.startsWith("/resources") || oRoute.path.startsWith("/test-resources"))) {
         // proxy options
         var oOptions = {};
 

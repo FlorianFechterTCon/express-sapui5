@@ -12,12 +12,9 @@ let serveUi5 = function(oSettings, app) {
     oAgent = oSettings.agent;
 
   let cdn = oSettings.cdn || "https://ui5.sap.com";
-  if (oSettings.version) {
-    cdn += "/" + oSettings.version;
-  }
 
   const homePage =
-    "/test-resources/sap/ushell/shells/sandbox/fioriSandbox.html";
+    oSettings.version + "/test-resources/sap/ushell/shells/sandbox/fioriSandbox.html";
   // redirect to FLP
   app.get("/", async (req, res) => {
     res.redirect(homePage);
